@@ -4,7 +4,6 @@ import { UserProfile } from './components/UserProfile';
 import { RepoList } from './components/RepoList';
 import type { GitHubUser, GitHubRepo } from './types';
 import { Github } from 'lucide-react'
-import fakeEnv from './utils/fakeEnv';
 import TrueEnv from './utils/TrueEnv';
 
 function App() {

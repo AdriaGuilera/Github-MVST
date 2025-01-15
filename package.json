@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "node server.js"
+    "start": "node server.cjs",
+    "heroku-postbuild": "npm run build"
   },
   "dependencies": {
     "clsx": "^2.1.0",
@@ -17,7 +18,11 @@
     "lucide-react": "^0.344.0",
     "octokit": "^4.1.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": "18.x"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
