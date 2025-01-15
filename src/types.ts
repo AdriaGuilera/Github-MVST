@@ -7,8 +7,6 @@ export interface GitHubUser {
   following: number;
   public_repos: number;
   location: string;
-  blog: string;
-  twitter_username: string;
   company: string;
 }
 

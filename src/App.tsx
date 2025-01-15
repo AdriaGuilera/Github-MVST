@@ -4,8 +4,11 @@ import { UserProfile } from './components/UserProfile';
 import { RepoList } from './components/RepoList';
 import type { GitHubUser, GitHubRepo } from './types';
 import { Github } from 'lucide-react'
+import fakeEnv from './utils/fakeEnv';
+import TrueEnv from './utils/TrueEnv';
 
 function App() {
+
   const [user, setUser] = useState<GitHubUser | null>(null);
   const [repos, setRepos] = useState<GitHubRepo[]>([]);
   const [error, setError] = useState<string>('');
@@ -20,9 +23,11 @@ function App() {
     setError('');
     try {
       const [userResponse, reposResponse] = await Promise.all([
-        fetch(`https://api.github.com/users/${username}`),
-        fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`)
+        fetch(`https://api.github.com/users/${username}`, TrueEnv()),
+        fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`, TrueEnv())
       ]);
+      
+
 
       if (!userResponse.ok || !reposResponse.ok) {
         throw new Error('User not found');
@@ -69,7 +74,7 @@ function App() {
           <SearchBar onSearch={fetchUserData} />
 
           {start && (
-            <div className='text-center mt-40'>
+            <div className='text-center mt-80'>
               <p className='text-sm text-gray-400'> Task given on MVST interview for full stack developer</p>
             </div>
           )}
@@ -101,6 +106,7 @@ function App() {
                              text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 
                              focus:ring-blue-500 focus:border-transparent"
                   />
+                
                   
                   <select
                     value={languageFilter}
@@ -126,11 +132,14 @@ function App() {
           )}
         </div>
       </div>
-      <footer className="fixed bottom-0 w-full">
-        <div className="container mx-auto px-4 py-8 text-center text-gray-400">
-             <p> Created with ❤️ by <a href="https://github.com/AdriaGuilera" className="text-blue-400 hover:underline">Adrià Guilera</a></p>
-        </div>
-      </footer>
+      {start &&
+          <footer className="fixed bottom-0 w-full">
+            <div className="container mx-auto px-4 py-8 text-center text-gray-400">
+                  <p> Created with ❤️ by <a href="https://github.com/AdriaGuilera" className="text-blue-400 hover:underline">Adrià Guilera</a></p>
+            </div>
+          </footer>
+      }
+      
     </div>
 
   );

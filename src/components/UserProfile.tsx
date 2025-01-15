@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Link as LinkIcon, Twitter, Building2, Users, User2 } from 'lucide-react';
+import { MapPin, Building2, Users, User2 } from 'lucide-react';
 import type { GitHubUser } from '../types';
 
 interface UserProfileProps {
@@ -41,26 +41,7 @@ export function UserProfile({ user }: UserProfileProps) {
             {user.location && (
               <div className="flex items-center gap-2 text-gray-300">
                 <MapPin className="h-5 w-5" />
-                <span>{user.location}</span>
-              </div>
-            )}
-            {user.blog && (
-              <div className="flex items-center gap-2">
-                <LinkIcon className="h-5 w-5 text-gray-300" />
-                <a href={user.blog} target="_blank" rel="noopener noreferrer" 
-                   className="text-blue-400 hover:underline">
-                  {user.blog}
-                </a>
-              </div>
-            )}
-            {user.twitter_username && (
-              <div className="flex items-center gap-2">
-                <Twitter className="h-5 w-5 text-gray-300" />
-                <a href={`https://twitter.com/${user.twitter_username}`} 
-                   target="_blank" rel="noopener noreferrer"
-                   className="text-blue-400 hover:underline">
-                  @{user.twitter_username}
-                </a>
+                <a href={`https://www.google.com/maps/search/${user.location}`}>{user.location}</a>
               </div>
             )}
           </div>
