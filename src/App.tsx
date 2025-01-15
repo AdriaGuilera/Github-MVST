@@ -126,9 +126,10 @@ function App() {
           )}
         </div>
       </div>
-      <footer>
+      <footer className="fixed bottom-0 w-full">
         <div className="container mx-auto px-4 py-8 text-center text-gray-400">
-          <p>Created by <a href="
+             <p> Created with ❤️ by <a href="https://github.com/AdriaGuilera" className="text-blue-400 hover:underline">Adrià Guilera</a></p>
+        </div>
       </footer>
     </div>
 
