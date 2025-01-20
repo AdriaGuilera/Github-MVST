@@ -27,7 +27,7 @@ This project was developed as part of the MVST interview process for a Full Stac
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/github-mvst.git
+git clone https://github.com/yourusername/Github-MVST.git
 ```
 
 2. Install dependencies:
