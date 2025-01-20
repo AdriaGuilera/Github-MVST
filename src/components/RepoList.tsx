@@ -2,25 +2,29 @@ import React from 'react';
 import { Star, GitFork } from 'lucide-react';
 import type { GitHubRepo } from '../utils/types';
 import { clsx } from 'clsx';
+import { languageColors } from '../constants/languageColors';
 
+/**
+ * Props interface for the RepoList component
+ * @interface
+ * @property {GitHubRepo[]} repos - Array of GitHub repositories to display
+ * @property {string} filter - Text string to filter repositories by name
+ * @property {string} languageFilter - Programming language to filter repositories by
+ */
 interface RepoListProps {
   repos: GitHubRepo[];
   filter: string;
   languageFilter: string;
 }
 
-const languageColors: Record<string, string> = {
-  JavaScript: 'bg-yellow-300',
-  TypeScript: 'bg-blue-500',
-  Python: 'bg-green-500',
-  Java: 'bg-red-500',
-  'C++': 'bg-pink-500',
-  Ruby: 'bg-red-600',
-  PHP: 'bg-purple-500',
-  Go: 'bg-cyan-500',
-  Rust: 'bg-orange-500',
-};
 
+
+/**
+ * Component that displays a list of GitHub repositories with filtering capabilities
+ * @component
+ * @param {RepoListProps} props - The props for the RepoList component
+ * @returns {JSX.Element} A list of repository cards with repository information
+ */
 export function RepoList({ repos, filter, languageFilter }: RepoListProps) {
   const filteredRepos = repos.filter(repo => {
     const nameMatch = repo.name.toLowerCase().includes(filter.toLowerCase());
@@ -28,16 +32,22 @@ export function RepoList({ repos, filter, languageFilter }: RepoListProps) {
     return nameMatch && languageMatch;
   });
 
+  /**
+   * Formats a date string into a localized date format
+   * @param {string} dateString - ISO date string to format
+   * @returns {string} Formatted date string
+   */
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric',
+      day: 'numeric', 
     });
   };
 
   return (
     <div className="w-full max-w-5xl space-y-4">
+      {/* Iterate through the map of repositories that fit in the filtering criteria */}
       {filteredRepos.map(repo => (
         <div key={repo.id} className="bg-gray-800 rounded-lg p-6 hover:bg-gray-750 transition-colors">
           <div className="flex justify-between items-start">
@@ -61,10 +71,10 @@ export function RepoList({ repos, filter, languageFilter }: RepoListProps) {
               </div>
             )}
             
-            {repo.stargazers_count > 0 && (
+            {repo.stars > 0 && (
               <div className="flex items-center gap-1">
                 <Star className="h-4 w-4" />
-                <span>{repo.stargazers_count}</span>
+                <span>{repo.stars}</span>
               </div>
             )}
             

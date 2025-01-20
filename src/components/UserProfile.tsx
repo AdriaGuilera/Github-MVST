@@ -2,11 +2,22 @@ import React from 'react';
 import { MapPin, Building2, Users, User2 } from 'lucide-react';
 import type { GitHubUser } from '../utils/types';
 
+/**
+ * Props interface for the UserProfile component
+ * @interface
+ * @property {GitHubUser} user - GitHub user data to display in the profile
+ */
 interface UserProfileProps {
   user: GitHubUser;
 }
 
-export function UserProfile({ user }: UserProfileProps) {
+/**
+ * Component that displays a GitHub user's profile information
+ * @component
+ * @param {UserProfileProps} props - The props for the UserProfile component
+ * @returns {JSX.Element} A card containing the user's profile information including avatar, name, bio, and stats
+ */
+export function UserProfile(user: GitHubUser) {
   return (
     <div className="w-full max-w-5xl bg-gray-800 rounded-lg p-6 shadow-lg">
       <div className="flex flex-col md:flex-row gap-6">

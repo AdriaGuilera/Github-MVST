@@ -1,57 +1,94 @@
-
 import type { GitHubUser, GitHubRepo } from './types';
 import axios from 'axios';
 
-export async function fetchGitHubUserData(
-    username: string,
-): Promise<GitHubUser> {
-    try {
-        const headers = {
-            Authorization: `Bearer ${import.meta.env.VITE_GITHUB_KEY}`,
-            'X-GitHub-Api-Version': '2022-11-28',
-        };
+const GITHUB_GRAPHQL_URL = 'https://api.github.com/graphql';
 
-        const response = await axios.get<GitHubUser>(
-            `https://api.github.com/users/${username}`,
-            { method: `GET`, headers }
+/**
+ * Fetches both user data and repositories for a given GitHub username using GraphQL API
+ * @param {string} username - The GitHub username to fetch data for
+ * @returns {user: GitHubUser; repos: GitHubRepo[]}>} Object containing user data and repositories
+ * @throws {Error} When API request fails or user is not found
+ */
+export async function fetchGitHubData(username: string): Promise<{ user: GitHubUser; repos: GitHubRepo[] }> {
+    try {
+        const query = `
+            query($username: String!) {
+                user(login: $username) {
+                    login
+                    name
+                    bio
+                    avatarUrl
+                    followers {
+                        totalCount
+                    }
+                    following {
+                        totalCount
+                    }
+                    repositories(first: 100, orderBy: {field: UPDATED_AT, direction: DESC}) {
+                        nodes {
+                            name
+                            description
+                            url
+                            stargazerCount
+                            forkCount
+                            primaryLanguage {
+                                name
+                                color
+                            }
+                            updatedAt
+                        }
+                    }
+                }
+            }
+        `;
+
+        const response = await axios.post(
+            GITHUB_GRAPHQL_URL,
+            { query, variables: { username } },
+            {
+                headers: {
+                    Authorization: `Bearer ${import.meta.env.VITE_GITHUB_KEY}`,
+                }
+            }
         );
 
-        if(response.status == 404) throw new Error(`User not found`)
+        if (response.data.errors) {
+            const error = response.data.errors[0];
+            if (error.type === 'NOT_FOUND') {
+                throw new Error('User not found');
+            }
+            throw new Error(`GitHub API Error: ${error.message}`);
+        }
 
-        return response.data;
+        const userData = response.data.data.user;
+        
+        const user: GitHubUser = {
+            login: userData.login,
+            name: userData.name,
+            bio: userData.bio,
+            avatar_url: userData.avatarUrl,
+            followers: userData.followers.totalCount,
+            following: userData.following.totalCount,
+            public_repos: userData.repositories.nodes.length,
+            location: userData.location,
+            company: userData.company
+        };
 
+        const repos: GitHubRepo[] = userData.repositories.nodes.map((repo: any) => ({
+            name: repo.name,
+            description: repo.description,
+            html_url: repo.url,
+            stars: repo.stargazerCount,
+            forks_count: repo.forkCount,
+            language: repo.primaryLanguage?.name || null,
+            language_color: repo.primaryLanguage?.color || null,
+            updated_at: repo.updatedAt
+        }));
+
+        return { user, repos };
     } catch (error) {
         if (axios.isAxiosError(error)) {
-            if(error.status == 404) throw new Error(`User not found`);
-            else throw new Error(`GitHub API Error: ${error.response?.data.message || error.message}`);
-        }
-        throw error;
-    }
-}
-
-export async function fetchGitHubRepos(
-    username: string,
-): Promise<GitHubRepo[]> {
-    try {
-        const headers = {
-            Authorization: `Bearer ${import.meta.env.VITE_GITHUB_KEY}`,
-            'X-GitHub-Api-Version': '2022-11-28',
-        };
-
-        const response = await axios.get<GitHubRepo[]>(
-            `https://api.github.com/users/${username}/repos?sort=updated&per_page=100`,
-            { method: `GET`, headers }
-        );
-
-        if(response.status == 404) throw new Error(`User not found`)
-
-        return response.data;
-    }
-    
-    catch (error) {
-        if (axios.isAxiosError(error)) {
-            if(error.status == 404) throw new Error(`User not found`);
-            else throw new Error(`GitHub API Error: ${error.response?.data.message || error.message}`);
+            throw new Error(`GitHub API Error: ${error.response?.data.message || error.message}`);
         }
         throw error;
     }

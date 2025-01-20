@@ -4,9 +4,12 @@ import { UserProfile } from './components/UserProfile';
 import { RepoList } from './components/RepoList';
 import { Header } from './components/Header';
 import type { GitHubUser, GitHubRepo } from './utils/types';
-import { fetchGitHubUserData, fetchGitHubRepos } from './utils/GetData';
+import { fetchGitHubData } from './utils/GetData';
 
-
+/**
+ * Main application component that handles GitHub user search and display
+ * @returns {JSX.Element} The rendered application
+ */
 function App() {
 
   const [user, setUser] = useState<GitHubUser | null>(null);
@@ -17,21 +20,18 @@ function App() {
   const [languageFilter, setLanguageFilter] = useState('');
   const [start, setStart] = useState(true);
 
+  /**
+   * Fetches GitHub user data and repositories
+   * @param {string} username - The GitHub username to search for
+   */
   const fetchUserData = async (username: string) => {
     setLoading(true);
     setStart(false);
     setError('');
     try {
-      const [userResponse, reposResponse] = await Promise.all([
-        fetchGitHubUserData(username),
-        fetchGitHubRepos(username)
-      ]);
-
-      const userData = await userResponse;
-      const reposData = await reposResponse;
-
-      setUser(userData);
-      setRepos(reposData);
+      const { user, repos } = await fetchGitHubData(username);
+      setUser(user);
+      setRepos(repos);
 
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -42,6 +42,9 @@ function App() {
     }
   };
   
+  /**
+   * Resets the application state to initial values
+   */
   const resetscreen = () => {
     setStart(true);
     setUser(null);
@@ -52,6 +55,9 @@ function App() {
     setLanguageFilter('');
   }
 
+  /**
+   * Extract unique programming languages from repositories list
+   */
   const languages = [...new Set(repos.map(repo => repo.language).filter(Boolean))];
 
   return (
@@ -59,7 +65,7 @@ function App() {
       <Header onreset ={resetscreen} />
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col items-center gap-8">
-          <SearchBar onSearch={fetchUserData} />
+          <SearchBar onSearch={fetchUserData}/>
 
             {start && (
             <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center'>
@@ -82,7 +88,7 @@ function App() {
 
           {user && (
             <>
-              <UserProfile user={user} />
+              <UserProfile {...user} />
               
               <div className="w-full max-w-5xl space-y-4">
                 <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">

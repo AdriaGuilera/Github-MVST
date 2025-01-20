@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 
 interface SearchBarProps {
   onSearch: (username: string) => void;
 }
 
-export function SearchBar({ onSearch }: SearchBarProps) {
+export function SearchBar({ onSearch}: SearchBarProps) {
   const [username, setUsername] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
