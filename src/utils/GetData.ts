@@ -33,7 +33,6 @@ export async function fetchGitHubData(username: string): Promise<{ user: GitHubU
                             forkCount
                             primaryLanguage {
                                 name
-                                color
                             }
                             updatedAt
                         }
@@ -81,7 +80,6 @@ export async function fetchGitHubData(username: string): Promise<{ user: GitHubU
             stars: repo.stargazerCount,
             forks_count: repo.forkCount,
             language: repo.primaryLanguage?.name || null,
-            language_color: repo.primaryLanguage?.color || null,
             updated_at: repo.updatedAt
         }));
 
