@@ -1,6 +1,6 @@
 # GitHub Repository Explorer
 
-This project was developed as part of the MVST interview process for a Full Stack Developer position. It provides a clean and efficient interface to search and explore GitHub users and their repositories.
+This project was developed as part of the MVST interview process for a Full Stack Developer position. A react web-app to search and explore GitHub users and their repositories.
 
 🔗 [Live Demo](https://github-mvst-21b43fc3bf42.herokuapp.com/)
 
@@ -11,8 +11,7 @@ This project was developed as part of the MVST interview process for a Full Stac
 - 📚 Browse through user repositories
 - 🏷️ Filter repositories by name
 - 💻 Filter repositories by programming language
-- 🎨 Clean and responsive UI
-- ⚡ Real-time updates using GitHub's GraphQL API
+- ⚡ GitHub's GraphQL API
 
 ## Tech Stack
 
@@ -27,7 +26,7 @@ This project was developed as part of the MVST interview process for a Full Stac
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/Github-MVST.git
+git clone https://github.com/adriaguilera/Github-MVST.git
 ```
 
 2. Install dependencies:
@@ -47,7 +46,7 @@ npm run dev
 
 ## Environment Variables
 
-- `VITE_GITHUB_KEY`: GitHub Personal Access Token (required for API access)
+- `VITE_GITHUB_KEY`: GitHub Personal Access Token 
 
 ## API Usage
 
