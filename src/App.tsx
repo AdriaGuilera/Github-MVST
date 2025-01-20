@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { SearchBar } from './components/SearchBar';
 import { UserProfile } from './components/UserProfile';
 import { RepoList } from './components/RepoList';
-import type { GitHubUser, GitHubRepo } from './types';
-import { Github } from 'lucide-react'
-import TrueEnv from './utils/TrueEnv';
+import { Header } from './components/Header';
+import type { GitHubUser, GitHubRepo } from './utils/types';
+import { fetchGitHubUserData, fetchGitHubRepos } from './utils/GetData';
+
 
 function App() {
 
@@ -22,21 +23,16 @@ function App() {
     setError('');
     try {
       const [userResponse, reposResponse] = await Promise.all([
-        fetch(`https://api.github.com/users/${username}`, TrueEnv()),
-        fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`, TrueEnv())
+        fetchGitHubUserData(username),
+        fetchGitHubRepos(username)
       ]);
-      
 
-
-      if (!userResponse.ok || !reposResponse.ok) {
-        throw new Error('User not found');
-      }
-
-      const userData = await userResponse.json();
-      const reposData = await reposResponse.json();
+      const userData = await userResponse;
+      const reposData = await reposResponse;
 
       setUser(userData);
       setRepos(reposData);
+
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
       setUser(null);
@@ -45,6 +41,7 @@ function App() {
       setLoading(false);
     }
   };
+  
   const resetscreen = () => {
     setStart(true);
     setUser(null);
@@ -59,24 +56,17 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
-      <header className="bg-gray-800 border-b-gray-700 py-4 mb-8">
-        <div className="container mx-auto px-4" onClick={resetscreen}>
-          <div className="flex flex-row gap-1 items-center">
-            <Github className="text-blue-100 h-8 w-8" />
-            <h1 className="text-2xl font-bold text-blue-100">GitHub Profile Viewer</h1>
-          </div>
-        </div>
-      </header>
-      
+      <Header onreset ={resetscreen} />
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col items-center gap-8">
           <SearchBar onSearch={fetchUserData} />
 
-          {start && (
-            <div className='text-center mt-80'>
-              <p className='text-sm text-gray-400'> Task given on MVST interview for full stack developer</p>
+            {start && (
+            <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center'>
+              <p className='text-sm text-gray-400'> Task given on MVST interview for full stack developer open positon</p>
+              <p className='text-sm text-gray-400 mt-10'> Type in a GitHub username to see their profile & all their repositories</p>
             </div>
-          )}
+            )}
 
           {loading && (
             <div className="text-center">
@@ -132,11 +122,11 @@ function App() {
         </div>
       </div>
       {start &&
-          <footer className="fixed bottom-0 w-full">
-            <div className="container mx-auto px-4 py-8 text-center text-gray-400">
-                  <p> Created with ❤️ by <a href="https://github.com/AdriaGuilera" className="text-blue-400 hover:underline">Adrià Guilera</a></p>
-            </div>
-          </footer>
+            <footer className="absolute bottom-0 w-full">
+                <div className="container mx-auto px-4 py-8 text-center text-gray-400">
+                    <p> Made by <a href="https://github.com/AdriaGuilera" className="text-blue-400 hover:underline">Adrià Guilera</a></p>
+                </div>
+            </footer>
       }
       
     </div>

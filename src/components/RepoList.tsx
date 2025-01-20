@@ -1,6 +1,6 @@
 import React from 'react';
 import { Star, GitFork } from 'lucide-react';
-import type { GitHubRepo } from '../types';
+import type { GitHubRepo } from '../utils/types';
 import { clsx } from 'clsx';
 
 interface RepoListProps {

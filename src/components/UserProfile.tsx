@@ -1,6 +1,6 @@
 import React from 'react';
 import { MapPin, Building2, Users, User2 } from 'lucide-react';
-import type { GitHubUser } from '../types';
+import type { GitHubUser } from '../utils/types';
 
 interface UserProfileProps {
   user: GitHubUser;
