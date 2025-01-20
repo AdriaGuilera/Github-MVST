@@ -55,3 +55,11 @@ This project uses GitHub's GraphQL API to fetch:
 - Repository data
 - Programming languages
 - Repository statistics
+
+
+## Future Improvements
+
+- Create a view for each repository containg all it's information
+- Add pagination for repositories list
+- Implement repository sorting options
+- Include repository & User commit history
